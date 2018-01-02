@@ -22,4 +22,8 @@ def main():
   with open('output/index.html', 'w') as f:
     f.write(output)
 
+  # Generate articles
+  config['nav'] = None
+  
+
 main()
