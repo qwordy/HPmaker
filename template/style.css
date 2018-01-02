@@ -1,0 +1,29 @@
+body {
+  font-size: 16px
+}
+
+.container {
+  width: 800px
+}
+
+.header {
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #e5e5e5
+}
+
+.header h3 {
+  line-height: 42.85px
+}
+
+.footer {
+  padding-top: 10px;
+  margin-top: 20px;
+  color: #777;
+  border-top: 1px solid #e5e5e5;
+}
+
+.date {
+  margin-bottom: 20px;
+  color: #777
+}
