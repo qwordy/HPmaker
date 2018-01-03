@@ -24,6 +24,32 @@ def main():
 
   # Generate articles
   config['nav'] = None
-  
+  for root, _, files in os.walk('content'):
+    for file in files:
+      if file.endswith('.md') and file != 'index.md':
+        print(file)
+        with open(os.path.join(root, file), 'r') as f:
+          state = 0
+          meta = text = ''
+          for line in f:
+            if line == '---\n':
+              state += 1
+            elif state == 1:
+              meta += line
+            elif state == 2:
+              text += line
+          print(meta)
+          print(text)
+
+
+        ''' with open(os.path.join(root, file), 'r') as f:
+          meta = yaml.load_all(f)
+          print(meta)
+          for m in meta:
+            print(1)
+        with open(os.path.join(root, file), 'r') as f:    
+          html = md.convert(f.read())
+          print(html) '''
+        
 
 main()
