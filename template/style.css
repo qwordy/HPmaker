@@ -7,7 +7,6 @@ body {
 }
 
 .header {
-  padding-bottom: 10px;
   margin-bottom: 20px;
   border-bottom: 1px solid #e5e5e5
 }
@@ -26,4 +25,8 @@ body {
 .date {
   margin-bottom: 20px;
   color: #777
+}
+
+.title {
+  margin-bottom: 20px
 }
