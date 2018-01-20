@@ -1,0 +1,1 @@
+cd output; git init; git add .; git commit -m yfy; git push -f git@github.com:qwordy/qwordy.github.io.git master
