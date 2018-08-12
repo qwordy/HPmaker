@@ -1,38 +1,34 @@
-body {
-  font-size: 16px
+@media only screen and (min-width: 1200px) {
+  .ui.container {
+    width: 933px
+  }
 }
 
-.container {
-  width: 800px
+#menu {
+  margin: 1.5em 0em
 }
 
-.header {
-  margin-bottom: 20px;
-  border-bottom: 1px solid #e5e5e5
-}
-
-.header h3 {
-  line-height: 42.85px
-}
-
-.footer {
-  padding-top: 10px;
-  margin-top: 20px;
-  margin-bottom: 20px;
-  color: #777;
-  border-top: 1px solid #e5e5e5
-}
-
-.date {
-  margin-bottom: 20px;
-  color: #777
+#content {
+  margin: 1.5em 1em
 }
 
 .title {
   margin-bottom: 20px;
-  text-align: center
+  text-align: center;
+  font-weight: normal
 }
 
 img {
   width: 100%
+}
+
+html, body {
+  font-size: 16px
+}
+
+#footer {
+  padding-top: 0.5em;
+  margin-top: 1.5em;
+  color: #777;
+  border-top: 1px solid #ddd;
 }

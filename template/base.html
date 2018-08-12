@@ -1,36 +1,38 @@
 <!DOCTYPE HTML>
 <html>
+  <head>
+    <title>{% block title %}{{title}}{% endblock %}</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" type="text/css" href="reset.min.css">
+    <link rel="stylesheet" type="text/css" href="site.min.css">    
+    <link rel="stylesheet" type="text/css" href="container.min.css">
+    <link rel="stylesheet" type="text/css" href="menu.min.css">
+    <link rel="stylesheet" type="text/css" href="style.css">
+  </head>
 
-<head>
-  <title>{% block title %}{{title}}{% endblock %}</title>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-  <link rel="stylesheet" href="bootstrap.min.css">
-  <link rel="stylesheet" href="style.css">
-</head>
-
-<body>
-  <div class="container">
-    <div class="header">
-      <ul class="nav nav-pills pull-right">
-        <li role="presentation" {% if nav=='index' %} class="active" {% endif %}>
-          <a href="/">首页</a>
-        </li>
-        <li role="presentation" {% if nav=='contents' %} class="active" {% endif %}>
-          <a href="contents.html">文章</a>
-        </li>
-      </ul>
-      <h3>
-        <a href="/">{{title}}</a>
-      </h3>
+  <body>
+    <div class="ui container">
+      <div id="menu" class="ui menu">
+        <div class="header item">
+          {{title}}
+        </div>
+        <div class="right menu">
+          <a class="item" href="index.html">
+            About
+          </a>
+          <a class="item" href="articles.html">
+            Articles
+          </a>
+        </div>
+      </div>
+      <div id="content">
+        {% block content %}{% endblock %}
+      </div>
+      <div id="footer">
+          © 2018
+          <a href="index.html">{{user}}</a> Powered by
+          <a href="https://github.com/qwordy/HPmaker/">HPmaker</a>
+        </div>
     </div>
-    {% block content %}{% endblock %}
-    <div class="footer">
-      © 2018
-      <a href="/">{{user}}</a> Powered by
-      <a href="https://github.com/qwordy/HPmaker/">HPmaker</a>,
-      <a href="https://disqus.com/">Disqus</a>
-    </div>
-  </div>
-</body>
-
+  </body>
 </html>

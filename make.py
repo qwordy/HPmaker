@@ -18,8 +18,7 @@ def writeFile(filename, str):
 def main():
     shutil.rmtree('output', True)
     os.mkdir('output')
-    shutil.copy('template/bootstrap.min.css', 'output')
-    shutil.copy('template/style.css', 'output')
+    os.system('cp template/*.css output')
 
     config = loadConfig('content/config.yaml')
     env = jinja2.Environment(loader=jinja2.FileSystemLoader('template'))
@@ -31,14 +30,12 @@ def main():
     # Generate index.html
     with open('content/index.md', 'r') as f:
         html = md.convert(f.read())
-    config['nav'] = 'index'
     config['text'] = html
     template = env.get_template('page.html')
     output = template.render(config)
     writeFile('output/index.html', output)
 
     # Generate articles
-    config['nav'] = None
     template = env.get_template('article.html')
     posts = []
     for root, _, files in os.walk('content'):
@@ -67,12 +64,11 @@ def main():
                 posts.append((post['title'], post['filename'], post['date']))
                 # posts.append(post)
 
-    # Generate contents
-    config['nav'] = 'contents'
+    # Generate articles.html
     config['posts'] = posts
-    template = env.get_template('contents.html')
+    template = env.get_template('articles.html')
     output = template.render(config)
-    writeFile('output/' + 'contents.html', output)
+    writeFile('output/' + 'articles.html', output)
 
 
 main()
