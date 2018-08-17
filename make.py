@@ -5,70 +5,106 @@ import jinja2
 import yaml
 import markdown
 
+OUTPUT = 'output'
+CONTENT = 'content'
+TEMPLATE = 'template'
+
+
 def loadConfig(filename):
     with open(filename, 'r') as f:
         return yaml.load(f)
 
 
 def writeFile(filename, str):
+    """
+    Write str to filename
+    """
     with open(filename, 'w') as f:
         f.write(str)
 
 
 def main():
-    shutil.rmtree('output', True)
-    os.mkdir('output')
-    os.system('cp template/*.css output')
+    shutil.rmtree(OUTPUT, True)
+    os.mkdir(OUTPUT)
+    os.system('cp ' + TEMPLATE + '/*.css ' + OUTPUT)
 
-    config = loadConfig('content/config.yaml')
-    env = jinja2.Environment(loader=jinja2.FileSystemLoader('template'))
+    config = loadConfig(CONTENT + '/config.yaml')
+    env = jinja2.Environment(loader=jinja2.FileSystemLoader(TEMPLATE))
     md = markdown.Markdown()
 
     # Generate CNAME
-    writeFile('output/CNAME', config['cname'])
+    writeFile(OUTPUT + '/CNAME', config['cname'])
 
     # Generate index.html
-    with open('content/index.md', 'r') as f:
+    with open(CONTENT + '/index.md', 'r') as f:
         html = md.convert(f.read())
     config['text'] = html
     template = env.get_template('page.html')
     output = template.render(config)
-    writeFile('output/index.html', output)
+    writeFile(OUTPUT + '/index.html', output)
 
     # Generate articles
     template = env.get_template('article.html')
     posts = []
-    for root, _, files in os.walk('content'):
-        for file in files:
-            name, suf = os.path.splitext(file)
-            if suf == '.md' and name != 'index' and name != 'contents':
-                with open(os.path.join(root, file), 'r') as f:
-                    state = 0
-                    meta = text = ''
-                    for line in f:
-                        if line == '---\n':
-                            state += 1
-                        elif state == 1:
-                            meta += line
-                        elif state == 2:
-                            text += line
-                meta = yaml.load(meta)
-                text = md.convert(text)
-                post = dict(meta)
-                post['filename'] = name + '.html'
-                post['text'] = text
-                config['post'] = post
-                output = template.render(config)
-                writeFile('output/' + post['filename'], output)
-                post = config['post']
-                posts.append((post['title'], post['filename'], post['date']))
-                # posts.append(post)
+    generateArticles(CONTENT, posts, md, config, template)
 
     # Generate articles.html
     config['posts'] = posts
     template = env.get_template('articles.html')
     output = template.render(config)
-    writeFile('output/' + 'articles.html', output)
+    writeFile(OUTPUT + '/articles.html', output)
 
 
-main()
+def generateArticles(root, posts, md, config, template):
+    """
+    Geretate articles in directory and sub-directories
+    """
+    # Remove CONTENT/
+    subroot = root[len(CONTENT) + 1 :]
+    if subroot != '':
+        os.mkdir(OUTPUT + '/' + subroot)
+    for f in os.listdir(root):
+        fullname = os.path.join(root, f)
+        # Directory
+        if os.path.isdir(fullname):
+            generateArticles(fullname, posts, md, config, template)
+        # Regular file
+        elif os.path.isfile(fullname):
+            name, suffix = os.path.splitext(f)
+            # Generate article
+            if suffix == '.md' and name != 'index':
+                post, text = parseMd(fullname, md)
+                post['path'] = fullname[len(CONTENT) + 1 : -3] + '.html'
+                post['text'] = text
+                config['post'] = post
+                output = template.render(config)
+                writeFile(OUTPUT + '/' + post['path'], output)
+                posts.append((post['title'], post['path'], post['date']))
+            # Copy other file
+            if suffix != '.md' and fullname != CONTENT + '/config.yaml':
+                dstPath = OUTPUT + '/' + fullname[len(CONTENT) + 1 :]
+                # print(fullname)
+                # print(dstPath)
+                shutil.copy(fullname, dstPath)
+
+
+def parseMd(filename, md):
+    """
+    return meta, text
+    """
+    state = 0
+    meta = text = ''
+    for line in open(filename):
+        if line == '---\n':
+            state += 1
+        elif state == 1:
+            meta += line
+        elif state == 2:
+            text += line
+    meta = yaml.load(meta)
+    text = md.convert(text)
+    return meta, text
+
+
+if __name__ == '__main__':
+    main()
