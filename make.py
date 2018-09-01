@@ -49,6 +49,7 @@ def main():
     generateArticles(CONTENT, posts, md, config, template)
 
     # Generate articles.html
+    posts.sort(key=lambda post: post[2], reverse=True)
     config['posts'] = posts
     template = env.get_template('articles.html')
     output = template.render(config)
