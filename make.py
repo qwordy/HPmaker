@@ -19,7 +19,7 @@ def writeFile(filename, str):
     """
     Write str to filename
     """
-    with open(filename, 'w') as f:
+    with open(filename, 'w', encoding='utf8') as f:
         f.write(str)
 
 
@@ -36,7 +36,7 @@ def main():
     writeFile(OUTPUT + '/CNAME', config['cname'])
 
     # Generate index.html
-    with open(CONTENT + '/index.md', 'r') as f:
+    with open(CONTENT + '/index.md', 'r', encoding='utf8') as f:
         html = md.convert(f.read())
     config['text'] = html
     template = env.get_template('page.html')
@@ -95,7 +95,7 @@ def parseMd(filename, md):
     """
     state = 0
     meta = text = ''
-    for line in open(filename):
+    for line in open(filename, encoding='utf8'):
         if line == '---\n':
             state += 1
         elif state == 1:
