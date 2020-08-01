@@ -49,6 +49,7 @@ def main():
     generateArticles(CONTENT, posts, md, config, template)
 
     # Generate articles.html
+    # Sort by date, post[2] is date
     posts.sort(key=lambda post: post[2], reverse=True)
     config['posts'] = posts
     template = env.get_template('articles.html')
@@ -75,6 +76,9 @@ def generateArticles(root, posts, md, config, template):
             # Generate article
             if suffix == '.md' and name != 'index':
                 post, text = parseMd(fullname, md)
+                # If hide, then skip
+                if 'hide' in post:
+                    continue
                 post['path'] = fullname[len(CONTENT) + 1 : -3] + '.html'
                 post['text'] = text
                 config['post'] = post
